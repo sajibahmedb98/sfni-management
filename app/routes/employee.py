@@ -8,17 +8,19 @@ router = APIRouter(
     tags=["Employee"],
 )
 
-list =[]
+
+list = []
+
 
 @router.post("/")
-def create_employee(employee: schemas.Employee):
-    # new_employee = models.Employee(**employee.model_dump())
-    # db.add(new_employee)
-    # db.commit()
-    # db.refresh(new_employee)
-    list.append(employee)
+async def create_employee(employee: schemas.EmployeeCreate, db: Session = Depends(get_db)):
+    new_employee = models.Employee(**employee.model_dump())
+    db.add(new_employee)
+    db.commit()
+    db.refresh(new_employee)
+    # list.append(employee)
 
-    return list
+    return new_employee
 
 
 @router.get("/")
