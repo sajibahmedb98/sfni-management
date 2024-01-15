@@ -10,4 +10,6 @@ app.include_router(employee.router)
 
 @app.get("/")
 def home():
-    return {"message": "Home"}
+    return {"message": "Home Page"}
+
+
