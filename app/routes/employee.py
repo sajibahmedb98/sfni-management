@@ -1,3 +1,5 @@
+from typing import Dict, Any
+
 from fastapi import APIRouter, Response, HTTPException, status, Depends
 from sqlalchemy.orm import Session
 from .. import schemas, models
@@ -50,8 +52,6 @@ def get_employee(id: int, db: Session = Depends(get_db)):
     return employee
 
 
-
-
 @router.delete("/{id}")
 def delete_employee(id: int, db: Session = Depends(get_db)):
     employee = db.query(models.Employee).filter(
@@ -62,11 +62,24 @@ def delete_employee(id: int, db: Session = Depends(get_db)):
 
     return {"message": f"Employee {employee_name} has been deleted"}
 
+
+#update employee by id
 @router.put("/{id}")
-def update_employee(id: int,employee: schemas.EmployeeUpdate, db: Session = Depends(get_db)):
-    employee = db.query(models.Employee).filter(
+def update_employee(id: int, update_data: Dict[str, Any], db: Session = Depends(get_db)):
+    existing_employee = db.query(models.Employee).filter(
         models.Employee.id == id).first()
-    
-    
-    
-    
+    if not existing_employee:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail='Employee does not exist')
+
+    for key, value in update_data.items():
+        setattr(existing_employee, key, value)
+
+    db.commit()
+
+    return {"message": "Employee has been updated"}
+
+# @router.put("/{id}")
+# def update_employee(id: int, employee: schemas.EmployeeUpdate, db: Session = Depends(get_db)):
+#     employee = db.query(models.Employee).filter(
+#         models.Employee.id == id).first()

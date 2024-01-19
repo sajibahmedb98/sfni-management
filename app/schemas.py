@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 from enum import Enum
 
@@ -27,4 +28,7 @@ class EmployeeOut(EmployeeBase):
     id: int
     
 class EmployeeUpdate(BaseModel):
-    pass
+    name:Optional[str] = None
+    phone_number:Optional[str] = None
+    role:Optional[EmployeeRole] = None
+    base_salary:Optional[int] = None
