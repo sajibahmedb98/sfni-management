@@ -1,9 +1,11 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from app.config import settings
 
 
-SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:postgres@localhost/postgres'
+# SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:postgres@localhost/postgres'
+SQLALCHEMY_DATABASE_URL = f"postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
